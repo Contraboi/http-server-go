@@ -10,9 +10,9 @@ func main() {
 		fmt.Println("Hello from /")
 		res.Send(200, "<h1>Hello</h1>")
 	})
-	myhttp.Get("/about", func(res *myhttp.Response, ctx *myhttp.Context) {
-		fmt.Println("Hello from /about")
-		res.Send(200, "<h1>About</h1>")
+
+	myhttp.Get("/banana", func(res *myhttp.Response, ctx *myhttp.Context) {
+		res.Send(200, "")
 	})
 	myhttp.Get("/echo/:slug", func(res *myhttp.Response, ctx *myhttp.Context) {
 		fmt.Println("Hello from /echo/:slug")
