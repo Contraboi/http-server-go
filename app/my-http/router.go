@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type HandlerFunc func(res *Response, ctx *Context)
+type HandlerFunc func(res *Response, req *Request, ctx *Context)
 
 type Node struct {
 	Children  map[string]*Node

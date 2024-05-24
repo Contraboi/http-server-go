@@ -40,7 +40,7 @@ func HandleRequest(conn net.Conn) {
 		return
 	}
 
-	node.handler(CreateResponse(req, conn), &Context{Params: params})
+	node.handler(CreateResponse(req, conn), req, &Context{Params: params})
 }
 
 func createRequest(buf []byte) *Request {
