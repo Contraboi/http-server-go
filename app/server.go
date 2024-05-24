@@ -6,18 +6,19 @@ import (
 )
 
 func main() {
-	myhttp.Get("/", func(res *myhttp.Response) {
+	myhttp.Get("/", func(res *myhttp.Response, ctx *myhttp.Context) {
 		fmt.Println("Hello from /")
 		res.Send(200, "<h1>Hello</h1>")
 	})
-	myhttp.Get("/about", func(res *myhttp.Response) {
+	myhttp.Get("/about", func(res *myhttp.Response, ctx *myhttp.Context) {
 		fmt.Println("Hello from /about")
 		res.Send(200, "<h1>About</h1>")
 	})
-	myhttp.Get("/echo/:slug", func(res *myhttp.Response) {
-		fmt.Println("Hello from /contact")
+	myhttp.Get("/echo/:slug", func(res *myhttp.Response, ctx *myhttp.Context) {
+		fmt.Println("Hello from /echo/:slug")
 		res.WriteHeader("Content-Type", "text/plain")
-		res.Send(200, "abc")
+		fmt.Println(ctx.Params)
+		res.Send(200, ctx.Params["slug"])
 	})
 
 	myhttp.ListenAndServe("4221")

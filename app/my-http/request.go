@@ -33,15 +33,14 @@ func HandleRequest(conn net.Conn) {
 		return
 	}
 
-	// TODO: Implement radix tree for faster routing
-	handler, ok := routes[req.Path]
+	node, params := router.Search(req.Path)
 
-	if !ok {
+	if node == nil {
 		conn.Write([]byte("HTTP/1.1 404 Not Found\r\n"))
 		return
 	}
 
-	handler(CreateResponse(req, conn))
+	node.handler(CreateResponse(req, conn), &Context{Params: params})
 }
 
 func createRequest(buf []byte) *Request {

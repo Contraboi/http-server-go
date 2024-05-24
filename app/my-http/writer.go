@@ -5,6 +5,10 @@ import (
 	"net"
 )
 
+type Context struct {
+	Params map[string]string
+}
+
 type Response struct {
 	Request *Request
 	conn    net.Conn

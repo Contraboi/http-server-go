@@ -6,14 +6,14 @@ import (
 	"os"
 )
 
-var routes = make(map[string]func(res *Response))
+var router = NewRouter()
 
-func Get(route string, handler func(res *Response)) {
-	routes[route] = handler
+func Get(route string, handler HandlerFunc) {
+	router.Insert(route, handler)
 }
 
-func Post(route string, handler func(res *Response)) {
-	routes[route] = handler
+func Post(route string, handler HandlerFunc) {
+	router.Insert(route, handler)
 }
 
 func ListenAndServe(port string) {
