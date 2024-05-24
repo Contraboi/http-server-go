@@ -14,7 +14,7 @@ func main() {
 		fmt.Println("Hello from /about")
 		res.Send(200, "<h1>About</h1>")
 	})
-	myhttp.Get("/echo/abc", func(res *myhttp.Response) {
+	myhttp.Get("/echo/:slug", func(res *myhttp.Response) {
 		fmt.Println("Hello from /contact")
 		res.WriteHeader("Content-Type", "text/plain")
 		res.Send(200, "abc")
