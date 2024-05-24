@@ -36,7 +36,7 @@ func HandleRequest(conn net.Conn) {
 	node, params := router.Search(req.Path)
 
 	if node == nil {
-		conn.Write([]byte("HTTP/1.1 404 Not Found\r\n"))
+		conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
 		return
 	}
 
