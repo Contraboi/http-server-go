@@ -11,8 +11,8 @@ func main() {
 		res.Send(200, "<h1>Hello</h1>")
 	})
 
-	myhttp.Get("/banana", func(res *myhttp.Response, ctx *myhttp.Context) {
-		res.Send(200, "")
+	myhttp.Get("/:fruit", func(res *myhttp.Response, ctx *myhttp.Context) {
+		res.Send(200, ctx.Params["fruit"])
 	})
 	myhttp.Get("/echo/:slug", func(res *myhttp.Response, ctx *myhttp.Context) {
 		fmt.Println("Hello from /echo/:slug")
