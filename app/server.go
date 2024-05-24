@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	myhttp "github.com/codecrafters-io/http-server-starter-go/app/my-http"
 )
 
@@ -21,7 +23,17 @@ func main() {
 		res.WriteHeader("Content-Type", "text/plain")
 		res.Send(200, req.Headers["User-Agent"])
 	})
+	myhttp.Get("/files/:file", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
+		directory := os.Args[2]
+		data, err := os.ReadFile(directory + "/" + ctx.Params["file"])
+		if err != nil {
+			res.Send(404, "")
+		} else {
+			res.WriteHeader("Content-Type", "application/octet-stream")
+			res.WriteHeader("Content-Length", fmt.Sprint(len(data)))
+			res.Send(200, string(data))
+		}
+	})
 
-	// test
 	myhttp.ListenAndServe("4221")
 }
