@@ -19,6 +19,7 @@ type Response struct {
 const (
 	OK        = 200
 	NOT_FOUND = 400
+	CREATED   = 201
 )
 
 var statusText = map[int]string{

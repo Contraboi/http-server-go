@@ -35,6 +35,17 @@ func main() {
 			res.Send(200, string(data))
 		}
 	})
+	myhttp.Post("/files", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
+		directory := os.Args[2]
+
+		err := os.WriteFile(directory+"/"+ctx.Params["file"], []byte(req.Body), 0644)
+		if err != nil {
+			res.Send(500, "Error writing file")
+		} else {
+			res.Send(201, "File written")
+		}
+
+	})
 
 	myhttp.ListenAndServe("4221")
 }
