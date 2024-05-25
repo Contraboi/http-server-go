@@ -3,6 +3,7 @@ package myhttp
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"net"
 	"strings"
 )
@@ -75,15 +76,21 @@ func createRequest(buf []byte) *Request {
 
 	var bodyBuilder strings.Builder
 	for {
-		line, _ := reader.ReadString('\n')
+		line, err := reader.ReadString('\n')
+		line = strings.Trim(line, "\x00")
 
-		if line == "" {
-			break
+		fmt.Println("Line:", line)
+		fmt.Println("Err:", err)
+
+		if err != nil {
+			bodyBuilder.WriteString(line)
 		}
 
-		bodyBuilder.WriteString(line)
+		if err == io.EOF {
+			break
+		}
 	}
-	body := strings.TrimSpace(bodyBuilder.String())
+	body := bodyBuilder.String()
 
 	return &Request{
 		Method:  strings.Fields(statusLine)[0],
