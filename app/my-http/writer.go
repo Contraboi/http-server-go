@@ -56,7 +56,7 @@ func (res *Response) Send(status int, body string) {
 	if len(encoding) > 0 {
 		for _, enc := range encoding {
 			for _, acc := range ACCCEPTED_ENCODINGS {
-				if enc == acc {
+				if strings.TrimSpace(enc) == acc {
 					res.WriteHeader(`Content-Encoding`, acc)
 				}
 			}
