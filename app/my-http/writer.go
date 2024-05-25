@@ -1,6 +1,8 @@
 package myhttp
 
 import (
+	"bytes"
+	"compress/gzip"
 	"fmt"
 	"net"
 	"strings"
@@ -45,23 +47,8 @@ func (res *Response) NotFound() {
 	res.conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
 }
 
-var ACCCEPTED_ENCODINGS = [1]string{"gzip"}
-
 func (res *Response) Send(status int, body string) {
-	if len(body) > 0 {
-		res.WriteHeader(`Content-Length`, fmt.Sprint(len(body)))
-	}
-
-	encoding := strings.Split(res.Request.Headers["Accept-Encoding"], ",")
-	if len(encoding) > 0 {
-		for _, enc := range encoding {
-			for _, acc := range ACCCEPTED_ENCODINGS {
-				if strings.TrimSpace(enc) == acc {
-					res.WriteHeader(`Content-Encoding`, acc)
-				}
-			}
-		}
-	}
+	body = res.encode(body)
 
 	dataToSend := "HTTP/1.1 " + statusText[status] + "\r\n"
 	for key, value := range res.headers {
@@ -70,4 +57,31 @@ func (res *Response) Send(status int, body string) {
 	dataToSend += "\r\n" + body
 
 	res.conn.Write([]byte(dataToSend))
+}
+func (res *Response) encode(body string) string {
+	encoding := strings.Split(res.Request.Headers["Accept-Encoding"], ",")
+	if len(encoding) > 0 && len(body) > 0 {
+		for _, enc := range encoding {
+			switch enc {
+			case `gzip`:
+				b := res.gzip(body)
+				body = string(b.Bytes())
+			default:
+				res.WriteHeader(`Content-Length`, fmt.Sprint(len(body)))
+			}
+		}
+	}
+
+	return body
+}
+func (res *Response) gzip(body string) bytes.Buffer {
+	var b bytes.Buffer
+	w := gzip.NewWriter(&b)
+	w.Write([]byte(body))
+	w.Close()
+
+	res.WriteHeader(`Content-Length`, fmt.Sprint(len(b.Bytes())))
+	res.WriteHeader(`Content-Encoding`, `gzip`)
+
+	return b
 }
