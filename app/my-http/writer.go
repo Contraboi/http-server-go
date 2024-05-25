@@ -25,6 +25,7 @@ const (
 var statusText = map[int]string{
 	OK:        "200 OK",
 	NOT_FOUND: "404 NOT_FOUND",
+	CREATED:   "201 CREATED",
 }
 
 func CreateResponse(req *Request, conn net.Conn) *Response {
@@ -42,9 +43,10 @@ func (res *Response) WriteHeader(key string, value string) {
 func (res *Response) NotFound() {
 	res.conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
 }
-
 func (res *Response) Send(status int, body string) {
-	res.WriteHeader(`Content-Length`, fmt.Sprint(len(body)))
+	if len(body) > 0 {
+		res.WriteHeader(`Content-Length`, fmt.Sprint(len(body)))
+	}
 
 	dataToSend := "HTTP/1.1 " + statusText[status] + "\r\n"
 	for key, value := range res.headers {

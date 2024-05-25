@@ -1,7 +1,6 @@
 package myhttp
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -9,16 +8,17 @@ type HandlerFunc func(res *Response, req *Request, ctx *Context)
 
 type Node struct {
 	Children  map[string]*Node
-	handler   HandlerFunc
+	handler   map[string]HandlerFunc
 	isDyanmic bool
 	param     string
+	method    string
 }
 
-func NewNode(isDynamic bool, handler HandlerFunc) *Node {
+func NewNode(isDynamic bool) *Node {
 	return &Node{
 		Children:  make(map[string]*Node),
 		isDyanmic: false,
-		handler:   handler,
+		handler:   make(map[string]HandlerFunc),
 	}
 }
 
@@ -28,11 +28,11 @@ type Router struct {
 
 func NewRouter() *Router {
 	return &Router{
-		root: NewNode(false, nil),
+		root: NewNode(false),
 	}
 }
 
-func (r *Router) Insert(path string, handler HandlerFunc) {
+func (r *Router) Insert(path string, method string, handler HandlerFunc) {
 	curr := r.root
 	split := strings.Split(path, "/")
 
@@ -47,12 +47,14 @@ func (r *Router) Insert(path string, handler HandlerFunc) {
 		}
 
 		if _, ok := curr.Children[sanitizedPart]; !ok {
-			curr.Children[sanitizedPart] = NewNode(isDynamic, handler)
+			curr.Children[sanitizedPart] = NewNode(isDynamic)
 			if isDynamic {
 				curr.Children[sanitizedPart].param = strings.TrimPrefix(part, ":")
 			}
 		}
 
+		curr.Children[sanitizedPart].handler[method] = handler
+		curr.Children[sanitizedPart].method = method
 		curr = curr.Children[sanitizedPart]
 	}
 }
@@ -77,6 +79,5 @@ func (r *Router) Search(path string) (*Node, map[string]string) {
 		}
 	}
 
-	fmt.Println(params)
 	return curr, params
 }

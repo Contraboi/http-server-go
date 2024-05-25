@@ -8,10 +8,6 @@ import (
 )
 
 func main() {
-	myhttp.Get("/", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
-		fmt.Println("Hello from /")
-		res.Send(200, "<h1>Hello</h1>")
-	})
 	myhttp.Get("/echo/:slug", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
 		fmt.Println("Hello from /echo/:slug")
 		res.WriteHeader("Content-Type", "text/plain")
@@ -23,6 +19,7 @@ func main() {
 		res.WriteHeader("Content-Type", "text/plain")
 		res.Send(200, req.Headers["User-Agent"])
 	})
+
 	myhttp.Get("/files/:file", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
 		directory := os.Args[2]
 
@@ -35,14 +32,15 @@ func main() {
 			res.Send(200, string(data))
 		}
 	})
-	myhttp.Post("/files", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
+	myhttp.Post("/files/:file", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
 		directory := os.Args[2]
 
 		err := os.WriteFile(directory+"/"+ctx.Params["file"], []byte(req.Body), 0644)
 		if err != nil {
 			res.Send(500, "Error writing file")
 		} else {
-			res.Send(201, "File written")
+			res.WriteHeader("Content-Type", "text/plain")
+			res.Send(201, "")
 		}
 
 	})

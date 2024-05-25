@@ -9,11 +9,11 @@ import (
 var router = NewRouter()
 
 func Get(route string, handler HandlerFunc) {
-	router.Insert(route, handler)
+	router.Insert(route, "GET", handler)
 }
 
 func Post(route string, handler HandlerFunc) {
-	router.Insert(route, handler)
+	router.Insert(route, "POST", handler)
 }
 
 func ListenAndServe(port string) {
