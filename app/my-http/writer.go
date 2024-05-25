@@ -51,16 +51,16 @@ func (res *Response) Send(status int, body string) {
 		res.WriteHeader(`Content-Length`, fmt.Sprint(len(body)))
 	}
 
-	encoding := res.headers["Content-Encoding"]
+	encoding := res.headers["Accept-Encoding"]
 	fmt.Println("Encoding: ", encoding)
 	if encoding != "" {
 		for _, acceptedEncoding := range ACCCEPTED_ENCODINGS {
 			if encoding == acceptedEncoding {
-				res.WriteHeader("Accept-Encoding", encoding)
+				res.WriteHeader("Content-Encoding", encoding)
 				break
 			}
 
-			res.WriteHeader("Accept-Encoding", "invalid-encoding")
+			res.WriteHeader("Content-Encoding", "invalid-encoding")
 		}
 
 	}
