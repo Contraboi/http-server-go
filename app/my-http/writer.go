@@ -43,9 +43,25 @@ func (res *Response) WriteHeader(key string, value string) {
 func (res *Response) NotFound() {
 	res.conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
 }
+
+var ACCCEPTED_ENCODINGS = [1]string{"gzip"}
+
 func (res *Response) Send(status int, body string) {
 	if len(body) > 0 {
 		res.WriteHeader(`Content-Length`, fmt.Sprint(len(body)))
+	}
+
+	encoding := res.headers["Content-Encoding"]
+	if encoding != "" {
+		for _, acceptedEncoding := range ACCCEPTED_ENCODINGS {
+			if encoding == acceptedEncoding {
+				res.WriteHeader("Accept-Encoding", encoding)
+				break
+			}
+
+			res.WriteHeader("Accept-Encoding", "invalid-encoding")
+		}
+
 	}
 
 	dataToSend := "HTTP/1.1 " + statusText[status] + "\r\n"
