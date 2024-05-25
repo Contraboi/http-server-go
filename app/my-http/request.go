@@ -3,7 +3,6 @@ package myhttp
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"net"
 	"strings"
 )
@@ -53,10 +52,10 @@ func createRequest(buf []byte) *Request {
 	}
 	statusLine = strings.TrimSpace(statusLine)
 
-	// Parse the headers
 	headers := make(map[string]string)
 	for {
 		line, err := reader.ReadString('\n')
+
 		if err != nil {
 			fmt.Println("Error reading headers:", err)
 			return nil
@@ -74,22 +73,17 @@ func createRequest(buf []byte) *Request {
 		headers[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
 	}
 
-	for key, value := range headers {
-		fmt.Println(key+":", value)
-	}
-	// Read the body
 	var bodyBuilder strings.Builder
 	for {
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			if err != io.EOF {
-				fmt.Println("Error reading body:", err)
-			}
+		line, _ := reader.ReadString('\n')
+
+		if line == "" {
 			break
 		}
+
 		bodyBuilder.WriteString(line)
 	}
-	body := bodyBuilder.String()
+	body := strings.TrimSpace(bodyBuilder.String())
 
 	return &Request{
 		Method:  strings.Fields(statusLine)[0],

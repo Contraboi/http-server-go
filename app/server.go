@@ -35,11 +35,13 @@ func main() {
 	myhttp.Post("/files/:file", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
 		directory := os.Args[2]
 
-		err := os.WriteFile(directory+"/"+ctx.Params["file"], []byte(req.Body), 0644)
+		fmt.Println(req.Body)
+		err := os.WriteFile(directory+"/"+ctx.Params["file"]+".txt", []byte(req.Body), 0644)
 		if err != nil {
 			res.Send(500, "Error writing file")
 		} else {
 			res.WriteHeader("Content-Type", "text/plain")
+			fmt.Println("File written successfully " + req.Body)
 			res.Send(201, req.Body)
 		}
 

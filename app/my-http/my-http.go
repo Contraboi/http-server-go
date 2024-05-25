@@ -22,7 +22,7 @@ func ListenAndServe(port string) {
 	fmt.Println("Listening on: " + port)
 
 	if err != nil {
-		fmt.Println("Failed to bind to port " + port)
+		fmt.Println("Error listening:", err.Error())
 		os.Exit(1)
 	}
 
