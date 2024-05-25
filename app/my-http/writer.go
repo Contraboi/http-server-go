@@ -25,7 +25,7 @@ const (
 var statusText = map[int]string{
 	OK:        "200 OK",
 	NOT_FOUND: "404 NOT_FOUND",
-	CREATED:   "201 CREATED",
+	CREATED:   "201 Created",
 }
 
 func CreateResponse(req *Request, conn net.Conn) *Response {
