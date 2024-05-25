@@ -8,6 +8,10 @@ import (
 )
 
 func main() {
+	myhttp.Get("/", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
+		fmt.Println("Hello from /")
+		res.Send(200, "")
+	})
 	myhttp.Get("/echo/:slug", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
 		fmt.Println("Hello from /echo/:slug")
 		res.WriteHeader("Content-Type", "text/plain")
