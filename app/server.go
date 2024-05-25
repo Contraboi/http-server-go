@@ -25,12 +25,13 @@ func main() {
 	})
 	myhttp.Get("/files/:file", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
 		directory := os.Args[2]
+
 		data, err := os.ReadFile(directory + "/" + ctx.Params["file"])
+		fmt.Println(directory + "/" + ctx.Params["file"])
 		if err != nil {
-			res.Send(404, "")
+			res.NotFound()
 		} else {
 			res.WriteHeader("Content-Type", "application/octet-stream")
-			res.WriteHeader("Content-Length", fmt.Sprint(len(data)))
 			res.Send(200, string(data))
 		}
 	})

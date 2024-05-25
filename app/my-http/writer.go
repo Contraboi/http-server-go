@@ -38,6 +38,10 @@ func (res *Response) WriteHeader(key string, value string) {
 	res.headers[key] = value
 }
 
+func (res *Response) NotFound() {
+	res.conn.Write([]byte("HTTP/1.1 404 Not Found\r\n\r\n"))
+}
+
 func (res *Response) Send(status int, body string) {
 	res.WriteHeader(`Content-Length`, fmt.Sprint(len(body)))
 
