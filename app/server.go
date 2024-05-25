@@ -15,7 +15,9 @@ func main() {
 	myhttp.Get("/echo/:slug", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {
 		fmt.Println("Hello from /echo/:slug")
 		res.WriteHeader("Content-Type", "text/plain")
-		fmt.Println(ctx.Params)
+		for key, value := range res.Request.Headers {
+			fmt.Println(key, value)
+		}
 		res.Send(200, ctx.Params["slug"])
 	})
 	myhttp.Get("/user-agent", func(res *myhttp.Response, req *myhttp.Request, ctx *myhttp.Context) {

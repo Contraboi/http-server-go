@@ -52,6 +52,7 @@ func (res *Response) Send(status int, body string) {
 	}
 
 	encoding := res.headers["Content-Encoding"]
+	fmt.Println("Encoding: ", encoding)
 	if encoding != "" {
 		for _, acceptedEncoding := range ACCCEPTED_ENCODINGS {
 			if encoding == acceptedEncoding {
