@@ -3,6 +3,7 @@ package myhttp
 import (
 	"fmt"
 	"net"
+	"strings"
 )
 
 type Context struct {
@@ -51,14 +52,15 @@ func (res *Response) Send(status int, body string) {
 		res.WriteHeader(`Content-Length`, fmt.Sprint(len(body)))
 	}
 
-	encoding := res.Request.Headers["Accept-Encoding"]
-	if encoding != "" {
-		for _, acceptedEncoding := range ACCCEPTED_ENCODINGS {
-			if encoding == acceptedEncoding {
-				res.WriteHeader("Content-Encoding", encoding)
+	encoding := strings.Split(res.Request.Headers["Accept-Encoding"], ",")
+	if len(encoding) > 0 {
+		for _, enc := range encoding {
+			for _, acc := range ACCCEPTED_ENCODINGS {
+				if enc == acc {
+					res.WriteHeader(`Content-Encoding`, acc)
+				}
 			}
 		}
-
 	}
 
 	dataToSend := "HTTP/1.1 " + statusText[status] + "\r\n"
