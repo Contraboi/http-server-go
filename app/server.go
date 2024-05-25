@@ -36,7 +36,7 @@ func main() {
 		directory := os.Args[2]
 
 		fmt.Println(req.Body)
-		err := os.WriteFile(directory+"/"+ctx.Params["file"]+".txt", []byte(req.Body), 0644)
+		err := os.WriteFile(directory+"/"+ctx.Params["file"], []byte(req.Body), 0644)
 		if err != nil {
 			res.Send(500, "Error writing file")
 		} else {
