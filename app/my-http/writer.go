@@ -60,9 +60,9 @@ func (res *Response) Send(status int, body string) {
 }
 func (res *Response) encode(body string) string {
 	encoding := strings.Split(res.Request.Headers["Accept-Encoding"], ",")
-	if len(encoding) > 0 && len(body) > 0 {
+	if len(encoding) > 0 {
 		for _, enc := range encoding {
-			switch enc {
+			switch strings.TrimSpace(enc) {
 			case `gzip`:
 				b := res.gzip(body)
 				body = string(b.Bytes())
