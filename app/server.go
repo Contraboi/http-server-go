@@ -40,7 +40,7 @@ func main() {
 			res.Send(500, "Error writing file")
 		} else {
 			res.WriteHeader("Content-Type", "text/plain")
-			res.Send(201, "")
+			res.Send(201, req.Body)
 		}
 
 	})
